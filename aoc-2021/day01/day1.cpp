@@ -3,6 +3,7 @@
 #include <array>
 #include <tl/adjacent.hpp>
 #include <tl/to.hpp>
+#include <tl/utility/tuple_utils.hpp>
 #include <iostream>
 
 void part1() {
@@ -26,7 +27,7 @@ void part2() {
 
 	auto filtered_input = input_vec
 		| tl::views::adjacent<3>
-		| std::views::transform([](auto t) { return std::get<0>(t) + std::get<1>(t) + std::get<2>(t); })
+		| std::views::transform([](auto t) { return tl::tuple_fold(t, 0, std::plus{}); })
 		| tl::views::adjacent<2>
 		| std::views::filter([](auto p) { return p.second > p.first; });
 
