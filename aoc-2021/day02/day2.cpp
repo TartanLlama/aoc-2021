@@ -4,20 +4,19 @@
 #include <string>
 #include <tl/to.hpp>
 #include <vector>
+#include <ctre.hpp>
+#include <tl/getlines.hpp>
 void part1() {
 	std::ifstream input{ "C:/Users/Sy/source/repos/aoc-2021/aoc-2021/day02/input.txt" };
 
 	auto x = 0;
 	auto y = 0;
 
-	for (std::string line; std::getline(input, line); ) {
-		auto split = line 
-			| std::views::split(' ')
-			| std::views::transform([](auto v) { return std::string(v.begin(), v.end()); })
-			| tl::to<std::vector>();
+	for (auto line : tl::views::getlines(input)) {
+		auto match = ctre::match<"(.+) (.+)">(line);
 
-		auto command = split[0];
-		auto amount = std::stoi(split[1]);
+		auto command = match.get<1>();
+		auto amount = std::stoi(match.get<2>().str());
 		if (command == "forward") {
 			x += amount;
 		}
@@ -40,14 +39,12 @@ void part2() {
 	auto y = 0;
 	auto aim = 0;
 
-	for (std::string line; std::getline(input, line); ) {
-		auto split = line
-			| std::views::split(' ')
-			| std::views::transform([](auto v) { return std::string(v.begin(), v.end()); })
-			| tl::to<std::vector>();
+	for (auto line : tl::views::getlines(input)) {
+		auto match = ctre::match<"(.+) (.+)">(line);
 
-		auto command = split[0];
-		auto amount = std::stoi(split[1]);
+		auto command = match.get<1>();
+		auto amount = std::stoi(match.get<2>().str());
+
 		if (command == "forward") {
 			x += amount;
 			y += amount * aim;
