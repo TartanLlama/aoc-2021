@@ -2,6 +2,7 @@
   "name": "aoc-2021",
   "version-string": "1",
   "dependencies": [
-    "tl-ranges"
+    "tl-ranges",
+    "ctre"
   ]
 }

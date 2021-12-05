@@ -5,6 +5,7 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("aoc-2021")
 find_package(tl-ranges CONFIG REQUIRED)
+find_package(ctre CONFIG REQUIRED)
 
 # Include sub-projects.
 add_subdirectory ("aoc-2021")
