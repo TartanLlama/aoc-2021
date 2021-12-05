@@ -22,9 +22,9 @@ void part1(std::istream& input) {
 		| std::views::transform([&](auto count) { return count > (lines.size() / 2) ? 1 : 0; });
 
 
-	auto gamma = tl::fold_left(new_number.begin(), new_number.end(), 0,
+	auto gamma = *tl::fold_left_first(new_number,
 		[](std::uint64_t acc, std::uint64_t i) { return (acc << 1) | i; });
-	auto epsilon = tl::fold_left(new_number.begin(), new_number.end(), 0,
+	auto epsilon = *tl::fold_left_first(new_number,
 		[](std::uint64_t acc, std::uint64_t i) { return (acc << 1) | (i ^ 1); });
 
 	std::cout << gamma * epsilon;

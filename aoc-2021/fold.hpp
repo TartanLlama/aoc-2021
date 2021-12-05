@@ -86,6 +86,7 @@ namespace tl {
 		return fold_left_with_iter(std::ranges::begin(std::forward<R>(r)), std::ranges::end(std::forward<R>(r)),
 			std::move(init), f);
 	}
+
 	template<std::input_iterator I, std::sentinel_for<I> S, class T,
 		indirectly_binary_left_foldable<T, I> F>
 		constexpr auto fold_left(I first, S last, T init, F f) {
@@ -96,6 +97,33 @@ namespace tl {
 		indirectly_binary_left_foldable<T, std::ranges::iterator_t<R>> F>
 		constexpr auto fold_left(R&& r, T init, F f) {
 		return fold_left(std::ranges::begin(std::forward<R>(r)), std::ranges::end(std::forward<R>(r)), std::move(init), f);
+	}
+
+	template <std::input_iterator I, std::sentinel_for<I> S,
+		indirectly_binary_left_foldable<std::iter_value_t<I>, I> F>
+		requires std::constructible_from<std::iter_value_t<I>, std::iter_reference_t<I>>
+	constexpr auto fold_left_first_with_iter(I first, S last, F f) ->
+		fold_left_first_with_iter_result<I, std::optional<decltype(fold_left(std::move(first), last, std::iter_value_t<I>(*first), f))>> {
+		using U = decltype(fold_left(std::move(first), last, std::iter_value_t<I>(*first), f));
+
+		if (first == last) {
+			return { std::move(first), std::optional<U>() };
+		}
+
+		std::optional<U> init(std::in_place, *first);
+		for (++first; first != last; ++first) {
+			*init = std::invoke(f, std::move(*init), *first);
+		}
+		return { std::move(first), std::move(init) };
+	}
+
+	template <std::ranges::input_range R,
+		indirectly_binary_left_foldable<std::ranges::range_value_t<R>, std::ranges::iterator_t<R>> F>
+		requires std::constructible_from<std::ranges::range_value_t<R>, std::ranges::range_reference_t<R>>
+	constexpr auto fold_left_first_with_iter(R&& r, F f) ->
+		fold_left_first_with_iter_result<std::ranges::borrowed_iterator_t<R>, std::optional<decltype(fold_left_first_with_iter(std::ranges::begin(std::forward<R>(r)), std::ranges::end(std::forward<R>(r)), f))>>
+	{
+		fold_left_first_with_iter(std::ranges::begin(std::forward<R>(r)), std::ranges::end(std::forward<R>(r)), f);
 	}
 
 	template <std::input_iterator I, std::sentinel_for<I> S,
