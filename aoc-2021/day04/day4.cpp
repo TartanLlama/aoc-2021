@@ -6,6 +6,7 @@
 #include <array>
 #include <numeric>
 #include <sstream>
+#include "../split.hpp"
 
 struct board {
 	std::array<std::array<std::pair<short, bool>, 5>, 10> rows;
@@ -40,10 +41,7 @@ struct board {
 
 auto parse_numbers_called(auto lines_it) {
 	auto num_called_string = (*lines_it++);
-	auto numbers_called = num_called_string
-		| std::views::split(',')
-		| std::views::transform([](auto s) { return std::stoi(std::string{ s.begin(), s.end() }); })
-		| tl::to<std::vector>();
+	auto numbers_called = split<int>(num_called_string, ',');
 	++lines_it;
 
 	return numbers_called;
