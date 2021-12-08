@@ -99,6 +99,18 @@ namespace tl {
 		return fold_left(std::ranges::begin(std::forward<R>(r)), std::ranges::end(std::forward<R>(r)), std::move(init), f);
 	}
 
+	template<std::input_iterator I, std::sentinel_for<I> S, class T,
+		indirectly_binary_left_foldable<T, I> F>
+		constexpr auto fold(I first, S last, T init, F f) {
+		return fold_left_with_iter(std::move(first), last, std::move(init), f).value;
+	}
+
+	template<std::ranges::input_range R, class T,
+		indirectly_binary_left_foldable<T, std::ranges::iterator_t<R>> F>
+		constexpr auto fold(R&& r, T init, F f) {
+		return fold_left(std::ranges::begin(std::forward<R>(r)), std::ranges::end(std::forward<R>(r)), std::move(init), f);
+	}
+
 	template <std::input_iterator I, std::sentinel_for<I> S,
 		indirectly_binary_left_foldable<std::iter_value_t<I>, I> F>
 		requires std::constructible_from<std::iter_value_t<I>, std::iter_reference_t<I>>

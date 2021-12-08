@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "../split.hpp"
+#include "../fold.hpp"
 #include <array>
 #include <algorithm>
 #include <numeric>
@@ -21,7 +22,7 @@ auto run_simulation(auto buckets, int days) {
 		buckets[6] += buckets[8];
 	}
 
-	return std::accumulate(buckets.begin(), buckets.end(), 0ull);
+	return tl::fold(buckets, 0ull, std::plus());
 }
 
 void part1(std::istream& input) {
