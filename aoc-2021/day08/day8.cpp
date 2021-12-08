@@ -30,20 +30,18 @@ struct display {
 	std::array<digit, 10> mapping;
 
 	void decode() {
+		std::vector<digit> remainder;
 		for (auto& d : representations) {
 			switch (d.count()) {
 			case 2: mapping[1] = d; break;
 			case 3: mapping[7] = d; break;
 			case 4: mapping[4] = d; break;
 			case 7: mapping[8] = d; break;
-			default: break;
+			default: remainder.push_back(d); break;
 			}
 		}
 
-		std::erase(representations, mapping[1]);
-		std::erase(representations, mapping[7]);
-		std::erase(representations, mapping[4]);
-		std::erase(representations, mapping[8]);
+		representations = std::move(remainder);
 
 		for (auto& d : representations) {
 			if (d.count() == 6 && contains(d, mapping[4])) {
@@ -52,26 +50,35 @@ struct display {
 			else if (d.count() == 5 && contains(d, mapping[1])) {
 				mapping[3] = d;
 			}
+			else {
+				remainder.push_back(d);
+			}
 		}
 
-		std::erase(representations, mapping[9]);
-		std::erase(representations, mapping[3]);
+		representations = std::move(remainder);
 
 		for (auto& d : representations) {
 			if (d.count() == 6 && contains(d, mapping[1])) {
 				mapping[0] = d;
 			}
+			else {
+				remainder.push_back(d);
+			}
 		}
 
-		std::erase(representations, mapping[0]);
+		representations = std::move(remainder);
 
 		for (auto& d : representations) {
 			if (d.count() == 6) {
 				mapping[6] = d;
 			}
+			else {
+				remainder.push_back(d);
+			}
 		}
 
-		std::erase(representations, mapping[6]);
+		representations = std::move(remainder);
+
 
 		for (auto& d : representations) {
 			if (d.count() == 5 && contains(mapping[6], d)) {
