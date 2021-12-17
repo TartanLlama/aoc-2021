@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <tl/getlines.hpp>
 #include <tl/to.hpp>
@@ -51,16 +51,12 @@ void part1(std::istream& input) {
 		graph = new_graph;
 	}
 
-	auto max_x = std::ranges::max_element(graph, std::ranges::less{}, &point::x);
-	auto max_y = std::ranges::max_element(graph, std::ranges::less{}, &point::y);
+	auto max_x = std::ranges::max_element(graph, std::ranges::less{}, &point::x)->x;
+	auto max_y = std::ranges::max_element(graph, std::ranges::less{}, &point::y)->y;
 
-	std::vector<std::vector<bool>> dot_graph;
-	dot_graph.resize(max_y->y+1);
-	for (auto& line : dot_graph) line.resize(max_x->x+1);
-	for (auto p : graph) { dot_graph[p.y][p.x] = true; }
-	for (auto& line : dot_graph) {
-		for (auto is_dot : line) {
-			std::cout << (is_dot ? '#' : '.');
+	for (int y = 0; y <= max_y; ++y) {
+		for (int x = 0; x <= max_x; ++x) {
+			std::cout << (graph.contains({x,y}) ? "#" : " ");
 		}
 		std::cout << '\n';
 	}

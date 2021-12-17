@@ -10,6 +10,7 @@ foreach(FILE IN LISTS SOURCES)
   add_executable(${FILE_STEM} ${FILE})
   target_link_libraries(${FILE_STEM} PRIVATE tl::ranges ctre::ctre)
   set_target_properties(${FILE_STEM} PROPERTIES CXX_STANDARD 23)
+  target_compile_options(${FILE_STEM} PRIVATE /utf-8)
 endforeach()
 
 # TODO: Add tests and install targets if needed.
